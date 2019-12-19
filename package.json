@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsnd --respawn index.ts",
-    "docker-start":"ts-node-dev --no-deps --respawn --poll --interval 1000 index.ts"
+    "dev": "ts-node-dev --no-deps --respawn --poll --interval 1000 index.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,17 +1,14 @@
-FROM node:alpine
+FROM node:10
 
-USER node
+WORKDIR /app
 
-RUN mkdir /home/node/app
-WORKDIR /home/node/app
-COPY . /home/node/app
-RUN npm install --production
+COPY ./package.json .
+COPY ./package-lock.json .
 
-CMD [ "npm", "run", "docker-start" ]
-# CMD ["node", "dist/server.js"]
+RUN npm install
+
+COPY . .
+
 EXPOSE 3000
 
-# Install development packages if NODE_ENV is set to "development"
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
-RUN if [ "$NODE_ENV" == "development" ]; then npm install ; fi
+CMD npm run dev

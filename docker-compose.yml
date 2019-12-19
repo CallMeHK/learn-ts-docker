@@ -1,34 +1,25 @@
-version: '3'
-
+version: "3"
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - NODE_ENV=development
-    environment:
-      - PORT=3000
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PW=123      
-    ports:
-      - 3000:3000
+  app:
+    build: .
     depends_on:
       - postgres
-    links:
-      - postgres:postgres
+    environment:
+      DATABASE_URL: postgres://user:pass@postgres:5432/db
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    command: npm run dev
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    command: npm run docker-start
+      - .:/app/
+      - /app/node_modules
 
   postgres:
-    image: postgres:alpine
-    restart: always
+    image: postgres:10.4
+    ports:
+      - "35432:5432"
     environment:
-      - DB_USER=postgres
-      - DB_PASS=123
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
