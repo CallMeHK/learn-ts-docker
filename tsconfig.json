@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "noImplicitThis": true,
+    "noImplicitReturns": true
+  },
+  "exclude": ["node_modules"]
+}
