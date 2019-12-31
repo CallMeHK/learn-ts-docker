@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "tsnd --respawn index.ts",
-    "dev": "ts-node-dev --no-deps --respawn --poll --interval 1000 index.ts"
+    "dev": "ts-node-dev --no-deps --respawn --poll --interval 1000 index.ts",
+    "migrate": "ts-node db/migrate.ts",
+    "sample-data": "ts-node db/sample-data.ts",
+    "drop-tables": "ts-node db/drop-tables.ts",
+    "ready": "ts-node ready.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +21,17 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/passport": "^1.0.2",
+    "@types/passport-local": "^1.0.33",
+    "@types/pg": "^7.14.0",
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^7.15.2",
     "ts-node": "^8.5.4"
   }
 }

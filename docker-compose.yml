@@ -10,7 +10,6 @@ services:
       PORT: 3000
     ports:
       - "3000:3000"
-    command: npm run dev
     volumes:
       - .:/app/
       - /app/node_modules
@@ -23,3 +22,12 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: db
+
+# open docker shell:
+# $ docker ps
+#   get the container id
+# $ docker exec -it <container id goes here> bash
+
+# to rebuild everything
+# $ docker-compose down
+# $ docker-compose up -d --force-recreate --build
