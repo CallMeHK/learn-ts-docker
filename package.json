@@ -9,6 +9,7 @@
     "migrate": "ts-node db/migrate.ts",
     "sample-data": "ts-node db/sample-data.ts",
     "drop-tables": "ts-node db/drop-tables.ts",
+    "rebuild-db": "ts-node db/drop-tables.ts && ts-node db/migrate.ts && ts-node db/sample-data.ts",
     "ready": "ts-node ready.ts"
   },
   "keywords": [],
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/jsonwebtoken": "^8.3.5",
     "@types/passport": "^1.0.2",
     "@types/passport-local": "^1.0.33",
     "@types/pg": "^7.14.0",
@@ -29,6 +31,7 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pg": "^7.15.2",

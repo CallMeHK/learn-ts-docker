@@ -34,5 +34,6 @@ export interface IUserService {
     email: string,
     password: string
   ) => Promise<ICreateUser>
+  findUserWithPassword: (id: number) => Promise<IFindUser>
   findUser: (id: number) => Promise<IFindUser>
 }

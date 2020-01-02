@@ -1,24 +1,30 @@
 import * as express from "express"
 import { UserService } from "../services/user.service"
-import { IUser } from "../services/user.interface"
+import { IFindUserRequest, ICreateUserRequest } from "./user.interface"
 
 export const findUserMiddleware = async (
-  req: express.Request,
+  req: IFindUserRequest,
   res: express.Response,
   next: express.NextFunction
 ) => {
   const id = parseInt(req.params.id)
   let userServiceResponse = await UserService.findUser(id)
 
-  if (userServiceResponse.success === true) {
-    const user: IUser = {
-      ...userServiceResponse.user,
-      password: undefined
-    }
-
-    res.send({ success: true, user })
-  } else {
-    res.send({ success: false })
-  }
+  return userServiceResponse
 }
 
+export const createUserMiddleware = async (
+  req: ICreateUserRequest,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  const { username, email, password } = req.body
+
+  const createUserAttempt = await UserService.verifyAndCreateUser(
+    username,
+    email,
+    password
+  )
+
+  res.send(createUserAttempt)
+}

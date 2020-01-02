@@ -26,11 +26,10 @@ const populateUsers = async () => {
   ]
   try {
     for (const userInfo of sampleUsers) {
-      const hashedPassword = await AuthenticationService.hashPassword(userInfo.password)
-      await UserService.createUser(
+      await UserService.verifyAndCreateUser(
         userInfo.name,
         userInfo.email,
-        hashedPassword
+        userInfo.password
       )
     }
   } catch (e) {

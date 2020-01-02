@@ -1,12 +1,14 @@
-import * as express from 'express'
-import { findUserMiddleware } from '../middleware/user.middleware'
+import * as express from "express"
+import {
+  findUserMiddleware,
+  createUserMiddleware
+} from "../middleware/user.middleware"
 
 const userRoutes = express()
 
+userRoutes.get("/", (req, res) => res.send("userRoutes"))
 
-userRoutes.get('/', (req, res) => res.send('userRoutes'))
-userRoutes.get('/:id', findUserMiddleware)
+userRoutes.get("/:id", findUserMiddleware)
+userRoutes.post("/create", createUserMiddleware)
 
-export {
-  userRoutes
-}
+export { userRoutes }

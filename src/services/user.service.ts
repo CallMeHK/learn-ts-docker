@@ -80,10 +80,26 @@ const UserServiceFactory = (
         email,
         hashedPassword
       )
-      return createdUser
+
+      if (createdUser.success === true) {
+        const createdUserWithoutPassword: IUser = {
+          ...createdUser.user,
+          password: undefined
+        }
+
+        return {
+          success: true,
+          user: createdUserWithoutPassword
+        }
+      }
+
+      return {
+        success: false,
+        error: "Failed to create user"
+      }
     },
 
-    findUser: async (id: number) => {
+    findUserWithPassword: async (id: number) => {
       const text = `SELECT * FROM users WHERE id = $1`
       const values = [id]
 
@@ -100,6 +116,26 @@ const UserServiceFactory = (
         return {
           success: false
         }
+      }
+    },
+
+    findUser: async (id: number) => {
+      const foundUser = await UserService.findUserWithPassword(id)
+
+      if (!foundUser.success) {
+        return {
+          success: false
+        }
+      }
+
+      const userWithoutPassword: IUser = {
+        ...foundUser.user,
+        password: undefined
+      }
+
+      return {
+        success: true,
+        user: userWithoutPassword
       }
     }
     // editUser: () => {},
