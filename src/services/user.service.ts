@@ -99,28 +99,39 @@ const UserServiceFactory = (
       }
     },
 
-    findUserWithPassword: async (id: number) => {
-      const text = `SELECT * FROM users WHERE id = $1`
-      const values = [id]
+    findUserWithPassword: async (
+      findBy: "id" | "username",
+      value: number | string
+    ) => {
+      const text = `SELECT * FROM users WHERE ${findBy} = $1`
+      const values = [value]
 
       try {
         const query = await pool.query<IUser>(text, values)
         const user = query.rows[0]
+
+        if (!user) {
+          console.log(`Could not find user ${findBy}: ${value}`)
+          return {
+            success: false
+          }
+        }
+        
         console.log(`User ${user.username} found`)
         return {
           success: true,
           user
         }
       } catch (e) {
-        console.log(`Could not find user ${id}`, e)
+        console.log(`Could not find user ${findBy}: ${value}`, e)
         return {
           success: false
         }
       }
     },
 
-    findUser: async (id: number) => {
-      const foundUser = await UserService.findUserWithPassword(id)
+    findUser: async (findBy: "id" | "username", value: number | string) => {
+      const foundUser = await UserService.findUserWithPassword(findBy, value)
 
       if (!foundUser.success) {
         return {

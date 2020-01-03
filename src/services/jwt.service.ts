@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken"
 import { config } from "../config"
-import { IJwtService, ISignToken } from "./jwt.interface"
+import { IJwtService, ISignToken, IJwtPayload } from "./jwt.interface"
 
 const jwtSecret = config.auth.jwtSecret
 
@@ -16,9 +16,21 @@ const JwtServiceFactory = (secret: string): IJwtService => {
       }
     },
 
-    verifyToken: () => {},
+    verifyToken: (token: string) => {
+     try {
+       const payload = jwt.verify(token, secret) as IJwtPayload
+       return {
+         valid: true,
+         payload
+       }
+     } catch (e) {
+       console.log('Cannot verify jwt')
+       return {
+         valid: false
+       }
+     } 
+    },
 
-    decodeToken: () => {}
   }
 
   return JwtService

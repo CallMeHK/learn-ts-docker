@@ -8,9 +8,9 @@ export const findUserMiddleware = async (
   next: express.NextFunction
 ) => {
   const id = parseInt(req.params.id)
-  let userServiceResponse = await UserService.findUser(id)
+  let userServiceResponse = await UserService.findUser("id", id)
 
-  return userServiceResponse
+  res.send(userServiceResponse)
 }
 
 export const createUserMiddleware = async (

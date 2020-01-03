@@ -13,8 +13,13 @@ const AuthenticationServiceFactory = (
       return hashedPassword
     },
     comparePasswords: async (password: string, hashedPassword: string) => {
-      const doPasswordsMatch = await bcrypt.compare(password, hashedPassword)
-      return doPasswordsMatch
+      try {
+        const doPasswordsMatch = await bcrypt.compare(password, hashedPassword)
+        return doPasswordsMatch
+      } catch (e) {
+        console.log(e)
+        return false
+      }
     }
   }
 
