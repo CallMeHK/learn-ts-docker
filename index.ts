@@ -16,7 +16,8 @@ app.use(bodyParser.json())
 app.get("/", (req, res) => res.send("Hello World!!!"))
 app.post("/", (req, res) => res.send(`${req.body.hello}`))
 
-app.use("/user", userRoutes)
-app.use("/auth", authRoutes)
+app.use("/api/user", userRoutes)
+app.use("/api/auth", authRoutes)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`
+  >>> Server listening on port ${port}!`))

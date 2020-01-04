@@ -49,3 +49,9 @@ export const logOutUserMiddleware = async (
   
   res.send({ success: true })
 }
+
+export const isUserLoggedIn =async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => { }

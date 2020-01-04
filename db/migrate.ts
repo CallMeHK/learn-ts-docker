@@ -50,7 +50,7 @@ ALTER TABLE "user_activities" ADD FOREIGN KEY ("activity_id") REFERENCES "activi
 ALTER TABLE "user_cache" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
 `)
-    console.log(" > Successfully built db \n")
+    console.log("> Successfully built db \n")
     pool.end()
   } catch (e) {
     console.log(e)
