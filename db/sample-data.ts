@@ -7,21 +7,24 @@ import { AuthenticationService } from "../src/services/authentication.service"
 const { pool } = config.postgres
 
 const populateUsers = async () => {
-  const sampleUsers = [
+  const sampleUsers: {name: string, email: string, password: string, role: 'user' | 'admin'}[] = [
     {
       name: "Ty",
       email: "ty@ex.com",
-      password: "1"
+      password: "1",
+      role: 'admin'
     },
     {
       name: "J",
       email: "J@ex.com",
-      password: "2"
+      password: "2",
+      role: 'user'
     },
     {
       name: "Haeli",
       email: "haeli@ex.com",
-      password: "3"
+      password: "3",
+      role: 'user'
     }
   ]
   try {
@@ -29,7 +32,8 @@ const populateUsers = async () => {
       await UserService.verifyAndCreateUser(
         userInfo.name,
         userInfo.email,
-        userInfo.password
+        userInfo.password,
+        userInfo.role
       )
     }
   } catch (e) {

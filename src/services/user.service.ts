@@ -1,10 +1,10 @@
-import { Pool } from "pg"
+import { Pool } from 'pg'
 
-import { config } from "../config"
+import { config } from '../config'
 
-import { IUserService, IUser } from "./user.interface"
-import { IAuthenticationService } from "./authentication.interface"
-import { AuthenticationService } from "./authentication.service"
+import { IUserService, IUser } from './user.interface'
+import { IAuthenticationService } from './authentication.interface'
+import { AuthenticationService } from './authentication.service'
 
 const pgPool = config.postgres.pool
 const defaultPointsPerBeer = config.userDefaults.pointsPerBeer
@@ -30,16 +30,21 @@ const UserServiceFactory = (
           const credentialsAvailable = !userExists
           return credentialsAvailable
         } catch (e) {
-          console.log("failed to query db", e)
+          console.log('failed to query db', e)
           return false
         }
       }
       return false
     },
 
-    createUser: async (username: string, email: string, password: string) => {
-      const text = `INSERT INTO users (username, email, password, point_per_beer) VALUES($1, $2, $3, $4) RETURNING *`
-      const values = [username, email, password, pointsPerBeer]
+    createUser: async (
+      username: string,
+      email: string,
+      password: string,
+      role: 'user' | 'admin' = 'user'
+    ) => {
+      const text = `INSERT INTO users (username, email, password, role) VALUES($1, $2, $3, $4) RETURNING *`
+      const values = [username, email, password, role]
 
       try {
         const query = await pool.query<IUser>(text, values)
@@ -50,10 +55,10 @@ const UserServiceFactory = (
           user
         }
       } catch (e) {
-        console.log("could not create user", e)
+        console.log('could not create user', e)
         return {
           success: false,
-          error: "Failed to create user"
+          error: 'Failed to create user'
         }
       }
     },
@@ -61,7 +66,8 @@ const UserServiceFactory = (
     verifyAndCreateUser: async (
       username: string,
       email: string,
-      password: string
+      password: string,
+      role: 'user' | 'admin' = 'user'
     ) => {
       const userIsValid = await UserService.verifyUserForCreation(
         username,
@@ -71,14 +77,15 @@ const UserServiceFactory = (
       if (!userIsValid) {
         return {
           success: false,
-          error: "Email or username already in use"
+          error: 'Email or username already in use'
         }
       }
       const hashedPassword = await AuthenticationService.hashPassword(password)
       const createdUser = await UserService.createUser(
         username,
         email,
-        hashedPassword
+        hashedPassword, 
+        role
       )
 
       if (createdUser.success === true) {
@@ -95,12 +102,12 @@ const UserServiceFactory = (
 
       return {
         success: false,
-        error: "Failed to create user"
+        error: 'Failed to create user'
       }
     },
 
     findUserWithPassword: async (
-      findBy: "id" | "username",
+      findBy: 'id' | 'username',
       value: number | string
     ) => {
       const text = `SELECT * FROM users WHERE ${findBy} = $1`
@@ -116,7 +123,7 @@ const UserServiceFactory = (
             success: false
           }
         }
-        
+
         console.log(`User ${user.username} found`)
         return {
           success: true,
@@ -130,7 +137,7 @@ const UserServiceFactory = (
       }
     },
 
-    findUser: async (findBy: "id" | "username", value: number | string) => {
+    findUser: async (findBy: 'id' | 'username', value: number | string) => {
       const foundUser = await UserService.findUserWithPassword(findBy, value)
 
       if (!foundUser.success) {

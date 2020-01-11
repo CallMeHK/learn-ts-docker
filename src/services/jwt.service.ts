@@ -6,9 +6,9 @@ const jwtSecret = config.auth.jwtSecret
 
 const JwtServiceFactory = (secret: string): IJwtService => {
   const JwtService = {
-    signToken: (userId: number): ISignToken => {
+    signToken: (userId: number, role: 'user' | 'admin'): ISignToken => {
       try {
-        const token = jwt.sign({ userId }, secret)
+        const token = jwt.sign({ userId, role }, secret)
         return { success: true, token }
       } catch (e) {
         console.log("Could not sign jwt")

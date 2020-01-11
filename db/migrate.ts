@@ -13,7 +13,8 @@ const migrate = async () => {
   "username" text UNIQUE NOT NULL,
   "email" text UNIQUE NOT NULL,
   "password" text NOT NULL,
-  "point_per_beer" int NOT NULL,
+  "role" text NOT NULL,
+  "active" bool NOT NULL DEFAULT true,
   "created_at" timestamp DEFAULT (now())
 );
 
@@ -48,7 +49,6 @@ ALTER TABLE "user_activities" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("i
 ALTER TABLE "user_activities" ADD FOREIGN KEY ("activity_id") REFERENCES "activities" ("id");
 
 ALTER TABLE "user_cache" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
 `)
     console.log("> Successfully built db \n")
     pool.end()

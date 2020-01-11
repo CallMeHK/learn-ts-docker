@@ -3,7 +3,8 @@ CREATE TABLE "users" (
   "username" text UNIQUE NOT NULL,
   "email" text UNIQUE NOT NULL,
   "password" text NOT NULL,
-  "point_per_beer" int NOT NULL,
+  "role" text NOT NULL,
+  "active" bool NOT NULL DEFAULT true,
   "created_at" timestamp DEFAULT (now())
 );
 

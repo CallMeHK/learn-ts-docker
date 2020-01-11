@@ -1,8 +1,8 @@
-import * as express from "express"
-import { ILoginUserRequest } from "./auth.interface"
-import { UserService } from "../services/user.service"
-import { AuthenticationService } from "../services/authentication.service"
-import { JwtService } from "../services/jwt.service"
+import * as express from 'express'
+import { ILoginUserRequest, IAuthenticationRequest } from './auth.interface'
+import { UserService } from '../services/user.service'
+import { AuthenticationService } from '../services/authentication.service'
+import { JwtService } from '../services/jwt.service'
 
 export const loginUserMiddleware = async (
   req: ILoginUserRequest,
@@ -11,12 +11,12 @@ export const loginUserMiddleware = async (
 ) => {
   const { username, password } = req.body
 
-  const getUser = await UserService.findUserWithPassword("username", username)
+  const getUser = await UserService.findUserWithPassword('username', username)
 
   if (!getUser.success) {
     res.send({
       success: false,
-      error: "Could not log in user"
+      error: 'Could not log in user'
     })
     return
   }
@@ -29,14 +29,14 @@ export const loginUserMiddleware = async (
   if (!doPasswordsMatch) {
     res.send({
       success: false,
-      error: "Invalid credentials"
+      error: 'Invalid credentials'
     })
     return
   }
 
-  const token = JwtService.signToken(getUser.user.id)
+  const token = JwtService.signToken(getUser.user.id, getUser.user.role)
 
-  res.cookie("Token", token.token)
+  res.cookie('Token', token.token)
   res.send({ success: true })
 }
 
@@ -46,12 +46,24 @@ export const logOutUserMiddleware = async (
   next: express.NextFunction
 ) => {
   res.clearCookie('Token')
-  
+
   res.send({ success: true })
 }
 
-export const isUserLoggedIn =async (
-  req: express.Request,
+export const decodeTokenMiddleware = async (
+  req: IAuthenticationRequest,
   res: express.Response,
   next: express.NextFunction
-) => { }
+) => {
+  const { Token } = req.cookies
+
+  const decodedToken = JwtService.verifyToken(Token)
+
+  req.state = {
+    ...req.state,
+    tokenValid: decodedToken.valid,
+    tokenPayload: decodedToken.payload
+  }
+
+  next()
+}

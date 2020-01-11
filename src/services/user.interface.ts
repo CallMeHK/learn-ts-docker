@@ -3,7 +3,8 @@ export interface IUser {
   username: string
   email: string
   password?: string
-  point_per_beer: number
+  role: 'user' | 'admin'
+  active: boolean
   created_at: string
 }
 
@@ -27,12 +28,14 @@ export interface IUserService {
   createUser: (
     username: string,
     email: string,
-    password: string
+    password: string,
+    role?: 'user' | 'admin'
   ) => Promise<ICreateUser>
   verifyAndCreateUser: (
     username: string,
     email: string,
-    password: string
+    password: string,
+    role?: 'user' | 'admin'
   ) => Promise<ICreateUser>
   findUserWithPassword: (findBy: 'id' | 'username', value: number | string) => Promise<IFindUser>
   findUser: (findBy: 'id' | 'username', value: number | string) => Promise<IFindUser>

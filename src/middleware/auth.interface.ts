@@ -6,3 +6,16 @@ export interface ILoginUserRequest extends express.Request {
     password: string
   }
 }
+
+export interface IAuthenticationRequest extends express.Request {
+  cookies:{
+    Token?: string
+  },
+  state?:{
+    tokenValid?: boolean,
+    tokenPayload?: {
+      userId: number,
+      iat: number
+    }
+  }
+}

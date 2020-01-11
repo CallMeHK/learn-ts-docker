@@ -1,5 +1,7 @@
 export interface IJwtPayload {
-  id: number
+  userId: number,
+  role: 'user' | 'admin'
+  iat: number
 }
 
 export interface ISignToken {
@@ -13,6 +15,6 @@ export interface IVerifyToken {
 }
 
 export interface IJwtService {
-  signToken: (userId: number) => ISignToken
+  signToken: (userId: number, role: 'user' | 'admin') => ISignToken
   verifyToken: (token: string) => IVerifyToken
 }
