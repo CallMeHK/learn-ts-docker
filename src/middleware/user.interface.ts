@@ -1,4 +1,5 @@
 import * as express from "express"
+import { IUser } from "../services/user.interface";
 
 export interface IFindUserRequest extends express.Request {
   params:{
@@ -12,4 +13,8 @@ export interface ICreateUserRequest extends express.Request {
     email: string
     password: string
   }
+}
+
+export interface IEditUserRequest extends express.Request {
+  body: Partial<IUser>
 }

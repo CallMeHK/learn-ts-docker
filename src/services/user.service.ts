@@ -84,7 +84,7 @@ const UserServiceFactory = (
       const createdUser = await UserService.createUser(
         username,
         email,
-        hashedPassword, 
+        hashedPassword,
         role
       )
 
@@ -155,8 +155,79 @@ const UserServiceFactory = (
         success: true,
         user: userWithoutPassword
       }
+    },
+    cleanseUserEditRequest: (userRequest: Partial<IUser>): Partial<IUser> => {
+      const { username, email, password, role, active } = userRequest
+      const cleanUserRequest = {
+        username,
+        email,
+        password,
+        role,
+        active
+      }
+
+      const cleanUserRequestWithoutUndefined = Object.keys(
+        cleanUserRequest
+      ).reduce(
+        (acc: Partial<IUser>, key: keyof Omit<IUser, 'id' | 'created_at'>) =>
+          cleanUserRequest[key] !== undefined
+            ? {
+                ...acc,
+                [key]: cleanUserRequest[key]
+              }
+            : acc,
+        {}
+      ) as Partial<IUser>
+
+      return cleanUserRequestWithoutUndefined
+    },
+    // REMOVE PASSWORD FROM THIS RETURN
+    editUser: async (id: number, user: Partial<IUser>) => {
+      if(user.password){
+        const hashedPassword = await AuthenticationService.hashPassword(user.password)
+        user = {
+          ...user,
+          password: hashedPassword
+        }
+      }
+
+
+      const keys = Object.keys(user) as Array<keyof Partial<IUser>>
+      const queryValues = Object.values(user)
+
+      if (!keys[0]) {
+        return {
+          success: false,
+          error: 'No valid changes to user submitted'
+        }
+      }
+
+
+
+      const inlineQueries = keys.map((k: string, i: number) => `${k} = $${i+1}`)
+      const joinedInlineQueries = inlineQueries.join(', ')
+      const queryIdValueString = `$${keys.length + 1}`
+
+      const queryText = `UPDATE users SET ${joinedInlineQueries} WHERE id = ${queryIdValueString} RETURNING *`
+
+      try {
+        const queryResponse = await pool.query<IUser>(
+          queryText,
+          queryValues.concat([id])
+        )
+        const editedUser = queryResponse.rows[0]
+        return {
+          success: true,
+          user: editedUser
+        }
+      } catch (e) {
+        console.log(e)
+        return {
+          success: false,
+          error: { queryText, vals: queryValues.concat([id]) } as any
+        }
+      }
     }
-    // editUser: () => {},
     // deleteUser: () => {},
   }
   return UserService

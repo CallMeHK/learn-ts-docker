@@ -10,9 +10,11 @@ export interface IUser {
 
 export interface ICreateUser {
   success: boolean
-  error?: string
+  error?: any
   user?: IUser
 }
+
+export interface IEditUser extends ICreateUser {}
 
 export interface IFindUser {
   success: boolean
@@ -37,6 +39,14 @@ export interface IUserService {
     password: string,
     role?: 'user' | 'admin'
   ) => Promise<ICreateUser>
-  findUserWithPassword: (findBy: 'id' | 'username', value: number | string) => Promise<IFindUser>
-  findUser: (findBy: 'id' | 'username', value: number | string) => Promise<IFindUser>
+  findUserWithPassword: (
+    findBy: 'id' | 'username',
+    value: number | string
+  ) => Promise<IFindUser>
+  findUser: (
+    findBy: 'id' | 'username',
+    value: number | string
+  ) => Promise<IFindUser>
+  cleanseUserEditRequest: (userRequest: Partial<IUser>) => Partial<IUser>
+  editUser: (id: number, user: Partial<IUser>) => Promise<IEditUser>
 }
